@@ -1,49 +1,48 @@
 import { NextResponse } from "next/server";
-import { projectService } from "@/server/modules/project/project.service";
+
 import { logService } from "@/server/modules/log/log.service";
+
+/* ------------------------------ GET LOGS ----------------------------- */
 
 export async function GET() {
   try {
-    const projects = await projectService.getProjects();
+    const logs = await logService.getLogs();
 
     return NextResponse.json({
       success: true,
-      data: projects,
+      data: logs,
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch projects",
+        message: "Failed to fetch logs",
       },
       { status: 500 }
     );
   }
 }
 
+/* ------------------------------ CREATE LOG ----------------------------- */
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    await projectService.createProject(body);
-
-    await logService.createLog({
-      title: `Projet créé`,
-      category: "Projet",
-      author: "Admin",
-      status: "Création",
-      createdAt: new Date().toISOString(),
-    });
+    await logService.createLog(body);
 
     return NextResponse.json({
       success: true,
-      message: "Project created successfully",
+      message: "Log created successfully",
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : "Unknown error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error",
       },
       { status: 400 }
     );

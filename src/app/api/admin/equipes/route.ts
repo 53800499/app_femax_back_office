@@ -1,35 +1,45 @@
 import { NextResponse } from "next/server";
-import { projectService } from "@/server/modules/project/project.service";
+
 import { logService } from "@/server/modules/log/log.service";
+import { equipeService } from "@/server/modules/equipe/equipe.service";
 
 export async function GET() {
   try {
-    const projects = await projectService.getProjects();
+    const data =
+      await equipeService.getEquipes();
 
     return NextResponse.json({
       success: true,
-      data: projects,
+
+      data: data,
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch projects",
+
+        message:
+          "Failed to fetch equipes",
       },
+
       { status: 500 }
     );
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(
+  req: Request
+) {
   try {
     const body = await req.json();
 
-    await projectService.createProject(body);
-
+    await equipeService.createEquipe(
+      body
+    );
+    
     await logService.createLog({
-      title: `Projet créé`,
-      category: "Projet",
+      title: `Équipe créée : ${body.name}`,
+      category: "Équipe",
       author: "Admin",
       status: "Création",
       createdAt: new Date().toISOString(),
@@ -37,14 +47,21 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Project created successfully",
+
+      message:
+        "Équipe created successfully",
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : "Unknown error",
+
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error",
       },
+
       { status: 400 }
     );
   }

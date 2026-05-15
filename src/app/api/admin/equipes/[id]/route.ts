@@ -3,8 +3,8 @@ import {
   NextResponse,
 } from "next/server";
 
-import { serviceService } from "@/server/modules/service/service.service";
 import { logService } from "@/server/modules/log/log.service";
+import { equipeService } from "@/server/modules/equipe/equipe.service";
 
 export async function PUT(
   req: NextRequest,
@@ -24,14 +24,14 @@ export async function PUT(
     const body =
       await req.json();
 
-    await serviceService.updateService(
+    await equipeService.updateEquipe(
       Number(id),
       body
     );
 
     await logService.createLog({
-      title: `Service modifié : ${body.title}`,
-      category: "Service",
+      title: `Équipe modifiée : ${body.name}`,
+      category: "Équipe",
       author: "Admin",
       status: "Modification",
       createdAt: new Date().toISOString(),
@@ -41,7 +41,7 @@ export async function PUT(
       success: true,
 
       message:
-        "Service updated successfully",
+        "Équipe updated successfully",
     });
   } catch (error) {
     return NextResponse.json(
@@ -74,12 +74,12 @@ export async function DELETE(
     const { id } =
       await params;
 
-    await serviceService.deleteService(
+    await equipeService.deleteEquipe(
       Number(id)
     );
     await logService.createLog({
-      title: `Service supprimé`,
-      category: "Service",
+      title: `Équipe supprimée`,
+      category: "Équipe",
       author: "Admin",
       status: "Suppression",
       createdAt: new Date().toISOString(),
@@ -89,7 +89,7 @@ export async function DELETE(
       success: true,
 
       message:
-        "Service deleted successfully",
+        "Équipe deleted successfully",
     });
   } catch (error) {
     return NextResponse.json(

@@ -4,6 +4,7 @@ import {
 } from "next/server";
 
 import { blogService } from "@/server/modules/blog/blog.service";
+import { logService } from "@/server/modules/log/log.service";
 
 export async function PUT(
   req: NextRequest,
@@ -27,6 +28,13 @@ export async function PUT(
       id,
       body
     );
+    await logService.createLog({
+      title: `Article modifié`,
+      category: "Blog",
+      author: "Admin",
+      status: "Modification",
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
@@ -68,6 +76,13 @@ export async function DELETE(
     await blogService.deleteBlog(
       id
     );
+    await logService.createLog({
+      title: `Article supprimé`,
+      category: "Blog",
+      author: "Admin",
+      status: "Suppression",
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

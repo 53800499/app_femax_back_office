@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { serviceService } from "@/server/modules/service/service.service";
+import { logService } from "@/server/modules/log/log.service";
 
 export async function GET() {
   try {
@@ -35,6 +36,14 @@ export async function POST(
     await serviceService.createService(
       body
     );
+    
+    await logService.createLog({
+      title: `Service créé : ${body.title}`,
+      category: "Service",
+      author: "Admin",
+      status: "Création",
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,

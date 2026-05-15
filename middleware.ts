@@ -8,8 +8,8 @@ export async function middleware(request: NextRequest) {
   // Routes publiques qui ne nécessitent pas d'authentification
   const publicRoutes = [
     '/',
-    '/auth/signin',
-    '/auth/signup',
+    '/signin',
+    '/signup',
     '/api/auth',
   ];
 

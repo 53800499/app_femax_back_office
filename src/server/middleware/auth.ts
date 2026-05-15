@@ -19,7 +19,7 @@ export async function verifyAuth(request: NextRequest) {
 }
 
 export function redirectToLogin(request: NextRequest) {
-  const loginUrl = new URL('/auth/signin', request.url);
+  const loginUrl = new URL('/signin', request.url);
   loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
   return NextResponse.redirect(loginUrl);
 }

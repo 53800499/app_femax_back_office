@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import Spinner from "../spinner/spinner";
 
 interface ButtonProps {
   children: ReactNode; // Button text or content
@@ -52,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled || loading}
     >
-      {startIcon && <span className="flex items-center">{startIcon}</span>}
+      {startIcon && !loading ? <span className="flex items-center">{startIcon}</span> : <span className="flex items-center"><Spinner/></span>}
       {children}
       {endIcon && <span className="flex items-center">{endIcon}</span>}
     </button>

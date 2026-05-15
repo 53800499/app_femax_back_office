@@ -8,59 +8,60 @@ import Button from "../ui/button/Button";
 import TextArea from "../form/input/TextArea";
 import { CirclePlus, SquarePen, X, Upload } from "lucide-react";
 
-export interface ProjectFormData {
+export interface BlogFormData {
   title: string;
   category: string;
-  client: string;
+  author: string;
   status: string;
-  description: string;
+  excerpt: string;
+  content: string;
   image: string;
-  imageFile?: File; // Nouveau champ pour stocker le fichier sélectionné
+  imageFile?: File;
 }
 
-interface ProjectFormProps {
+interface BlogFormProps {
   loading: boolean;
   error: string | null;
-  editingProject: string | null;
-  form: ProjectFormData;
+  editingPost: string | null;
+  form: BlogFormData;
   isOpen: boolean;
   closeModal: () => void;
-  setForm: React.Dispatch<React.SetStateAction<ProjectFormData>>;
+  setForm: React.Dispatch<React.SetStateAction<BlogFormData>>;
   resetForm: () => void;
   handleSubmit: (e: React.FormEvent) => void;
   errorStatus?: boolean;
 }
 
-export default function ProjectForm({
+export default function BlogForm({
   form,
   isOpen,
   closeModal,
   setForm,
   resetForm,
   handleSubmit,
-  editingProject,
+  editingPost,
   loading,
   error,
   errorStatus,
-}: ProjectFormProps) {
+}: BlogFormProps) {
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} className="m-4 max-w-[800px]">
+    <Modal isOpen={isOpen} onClose={closeModal} className="m-4 max-w-[900px]">
       <div className="rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-8">
         {/* Header */}
         <div className="mb-6">
           <p className="text-sm font-medium text-[#D01F1F]">
-            Gestion des projets
+            Gestion du blog
           </p>
 
           <h4 className="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            {editingProject
-              ? "Modifier le projet"
-              : "Ajouter un nouveau projet"}
+            {editingPost
+              ? "Modifier un article"
+              : "Ajouter un nouvel article"}
           </h4>
 
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Gérez les réalisations et projets affichés sur le site vitrine
-            FEMAX.
+            Gérez les articles affichés sur le blog de votre application
+            vitrine.
           </p>
         </div>
 
@@ -75,12 +76,12 @@ export default function ProjectForm({
 
           {/* Grid */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {/* Project title */}
+            {/* Title */}
             <div className="lg:col-span-2">
-              <Label>Titre du projet</Label>
+              <Label>Titre de l’article</Label>
 
               <Input
-                placeholder="Ex: Identité visuelle FEMAX"
+                placeholder="Ex: Les tendances du design web en 2026"
                 defaultValue={form.title}
                 onChange={(e) =>
                   setForm({ ...form, title: e.target.value })
@@ -93,7 +94,7 @@ export default function ProjectForm({
               <Label>Catégorie</Label>
 
               <Input
-                placeholder="Ex: Design Graphique"
+                placeholder="Ex: Design, Développement, Marketing"
                 defaultValue={form.category}
                 onChange={(e) =>
                   setForm({ ...form, category: e.target.value })
@@ -101,15 +102,15 @@ export default function ProjectForm({
               />
             </div>
 
-            {/* Client */}
+            {/* Author */}
             <div>
-              <Label>Client</Label>
+              <Label>Auteur</Label>
 
               <Input
-                placeholder="Ex: Entreprise Nova"
-                defaultValue={form.client}
+                placeholder="Ex: FEMAX Studio"
+                defaultValue={form.author}
                 onChange={(e) =>
-                  setForm({ ...form, client: e.target.value })
+                  setForm({ ...form, author: e.target.value })
                 }
               />
             </div>
@@ -127,28 +128,34 @@ export default function ProjectForm({
               >
                 <option value="">Sélectionner un statut</option>
                 <option value="Publié">Publié</option>
-                <option value="En cours">En cours</option>
-                <option value="Terminé">Terminé</option>
-                <option value="En attente">En attente</option>
+                <option value="Brouillon">Brouillon</option>
+                <option value="Planifié">Planifié</option>
               </select>
             </div>
 
-            {/* Image */}
+            {/* Featured Image */}
             <div>
-              <Label>Image du projet</Label>
+              <Label>Image de couverture</Label>
 
               <div className="space-y-3">
-                {/* Aperçu de l'image */}
+                {/* Preview */}
                 {form.image && (
                   <div className="relative">
                     <img
                       src={form.image}
                       alt="Aperçu"
-                      className="h-32 w-full rounded-lg object-cover"
+                      className="h-40 w-full rounded-xl object-cover"
                     />
+
                     <button
                       type="button"
-                      onClick={() => setForm({ ...form, image: "" })}
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          image: "",
+                          imageFile: undefined,
+                        })
+                      }
                       className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                     >
                       <X className="h-4 w-4" />
@@ -156,26 +163,26 @@ export default function ProjectForm({
                   </div>
                 )}
 
-                {/* Input file caché */}
+                {/* Hidden file input */}
                 <input
                   type="file"
                   accept="image/*"
+                  className="hidden"
+                  id="image-upload"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
+
                     if (file) {
-                      // Stocker le fichier dans le formulaire au lieu de l'uploader
                       setForm({
                         ...form,
                         imageFile: file,
-                        image: URL.createObjectURL(file) // Aperçu temporaire
+                        image: URL.createObjectURL(file),
                       });
                     }
                   }}
-                  className="hidden"
-                  id="image-upload"
                 />
 
-                {/* Bouton d'upload */}
+                {/* Upload button */}
                 <label
                   htmlFor="image-upload"
                   className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition hover:border-[#D01F1F] hover:text-[#D01F1F] dark:border-gray-700 dark:text-gray-400"
@@ -186,16 +193,30 @@ export default function ProjectForm({
               </div>
             </div>
 
-            {/* Description */}
-            <div className="lg:col-span-2">
-              <Label>Description</Label>
+            {/* Excerpt */}
+            <div>
+              <Label>Résumé de l’article</Label>
 
               <TextArea
-                rows={5}
-                placeholder="Décrivez le projet, les objectifs, les réalisations et les résultats obtenus..."
-                value={form.description}
+                rows={6}
+                placeholder="Ajoutez un court résumé qui sera affiché sur la page du blog..."
+                value={form.excerpt}
                 onChange={(value) =>
-                  setForm({ ...form, description: value })
+                  setForm({ ...form, excerpt: value })
+                }
+              />
+            </div>
+
+            {/* Content */}
+            <div className="lg:col-span-2">
+              <Label>Contenu de l’article</Label>
+
+              <TextArea
+                rows={10}
+                placeholder="Rédigez ici le contenu complet de l’article..."
+                value={form.content}
+                onChange={(value) =>
+                  setForm({ ...form, content: value })
                 }
               />
             </div>
@@ -215,9 +236,19 @@ export default function ProjectForm({
             </Button>
 
             <Button
-              type="submit" loading={loading} startIcon={editingProject ? <SquarePen className="mr-1 h-4 w-4" /> : <CirclePlus className="mr-1 h-4 w-4" />}
+              type="submit"
+              loading={loading}
+              startIcon={
+                editingPost ? (
+                  <SquarePen className="mr-1 h-4 w-4" />
+                ) : (
+                  <CirclePlus className="mr-1 h-4 w-4" />
+                )
+              }
             >
-              {editingProject ? "Mettre à jour" : "Ajouter le projet"}
+              {editingPost
+                ? "Mettre à jour l’article"
+                : "Publier l’article"}
             </Button>
           </div>
         </form>

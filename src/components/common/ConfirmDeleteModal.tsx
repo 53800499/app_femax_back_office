@@ -55,7 +55,8 @@ export default function ConfirmDeleteModal({
             variant="outline"
             onClick={onClose}
             disabled={loading}
-          ><X className="w-4 h-4 mr-1"/>
+            startIcon={<X className="w-4 h-4 mr-1"/>}
+          >
             Annuler
           </Button>
 
@@ -63,7 +64,8 @@ export default function ConfirmDeleteModal({
             onClick={onConfirm} variant="danger"
             className="bg-red-600 hover:bg-red-700 text-white"
             loading={loading}
-          >{loading? "" : <Trash2 className="w-4 h-4 mr-1" />}
+            startIcon={<Trash2 className="w-4 h-4 mr-1" />}
+          >
             Supprimer
           </Button>
         </div>

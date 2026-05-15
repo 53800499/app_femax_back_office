@@ -1,71 +1,114 @@
 "use client";
 
 import React from "react";
-import { Modal } from "../ui/modal";
-import Label from "../form/Label";
-import Input from "../form/input/InputField";
-import Button from "../ui/button/Button";
-import TextArea from "../form/input/TextArea";
-import { CirclePlus, SquarePen, X, Upload } from "lucide-react";
 
-export interface ProjectFormData {
-  title: string;
-  category: string;
-  client: string;
-  status: string;
-  description: string;
+import { Modal } from "../ui/modal";
+
+import Label from "../form/Label";
+
+import Input from "../form/input/InputField";
+
+import Button from "../ui/button/Button";
+
+import TextArea from "../form/input/TextArea";
+
+import {
+  CirclePlus,
+  SquarePen,
+  X,
+  Upload,
+} from "lucide-react";
+
+export interface EquipeFormData {
+  id?: number;
+
+  name: string;
+
+  role: string;
+
   image: string;
-  imageFile?: File; // Nouveau champ pour stocker le fichier sélectionné
+
+  description: string;
+
+  imageFile?: File;
 }
 
-interface ProjectFormProps {
+interface EquipeFormProps {
   loading: boolean;
+
   error: string | null;
-  editingProject: string | null;
-  form: ProjectFormData;
+
+  editingMember: string | null;
+
+  form: EquipeFormData;
+
   isOpen: boolean;
+
   closeModal: () => void;
-  setForm: React.Dispatch<React.SetStateAction<ProjectFormData>>;
+
+  setForm: React.Dispatch<
+    React.SetStateAction<EquipeFormData>
+  >;
+
   resetForm: () => void;
-  handleSubmit: (e: React.FormEvent) => void;
+
+  handleSubmit: (
+    e: React.FormEvent
+  ) => void;
+
   errorStatus?: boolean;
 }
 
-export default function ProjectForm({
+export default function EquipeForm({
   form,
+
   isOpen,
+
   closeModal,
+
   setForm,
+
   resetForm,
+
   handleSubmit,
-  editingProject,
+
+  editingMember,
+
   loading,
+
   error,
+
   errorStatus,
-}: ProjectFormProps) {
+}: EquipeFormProps) {
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} className="m-4 max-w-[800px]">
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModal}
+      className="m-4 max-w-[900px]"
+    >
       <div className="rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-8">
         {/* Header */}
         <div className="mb-6">
           <p className="text-sm font-medium text-[#D01F1F]">
-            Gestion des projets
+            Gestion de l’équipe
           </p>
 
           <h4 className="mt-1 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            {editingProject
-              ? "Modifier le projet"
-              : "Ajouter un nouveau projet"}
+            {editingMember
+              ? "Modifier un membre"
+              : "Ajouter un membre"}
           </h4>
 
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Gérez les réalisations et projets affichés sur le site vitrine
-            FEMAX.
+            Gérez les membres affichés sur la page équipe de votre site vitrine.
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
           {/* Error */}
           {errorStatus && (
             <div className="rounded-xl bg-red-50 p-4 text-sm text-red-600 dark:bg-red-500/10 dark:text-red-400">
@@ -75,80 +118,92 @@ export default function ProjectForm({
 
           {/* Grid */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {/* Project title */}
+            {/* ID */}
+            {/* <div>
+              <Label>ID</Label>
+
+              <Input
+                type="number"
+                placeholder="Ex: 1"
+                defaultValue={String(
+                  form.id || ""
+                )}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+
+                    id: Number(
+                      e.target.value
+                    ),
+                  })
+                }
+              />
+            </div> */}
+
+            {/* Name */}
+            <div>
+              <Label>Nom</Label>
+
+              <Input
+                placeholder="Ex: John Doe"
+                defaultValue={form.name}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+
+                    name:
+                      e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            {/* Role */}
             <div className="lg:col-span-2">
-              <Label>Titre du projet</Label>
+              <Label>Rôle</Label>
 
               <Input
-                placeholder="Ex: Identité visuelle FEMAX"
-                defaultValue={form.title}
+                placeholder="Ex: Développeur Frontend"
+                defaultValue={form.role}
                 onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
+                  setForm({
+                    ...form,
+
+                    role:
+                      e.target.value,
+                  })
                 }
               />
-            </div>
-
-            {/* Category */}
-            <div>
-              <Label>Catégorie</Label>
-
-              <Input
-                placeholder="Ex: Design Graphique"
-                defaultValue={form.category}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value })
-                }
-              />
-            </div>
-
-            {/* Client */}
-            <div>
-              <Label>Client</Label>
-
-              <Input
-                placeholder="Ex: Entreprise Nova"
-                defaultValue={form.client}
-                onChange={(e) =>
-                  setForm({ ...form, client: e.target.value })
-                }
-              />
-            </div>
-
-            {/* Status */}
-            <div>
-              <Label>Statut</Label>
-
-              <select
-                defaultValue={form.status}
-                onChange={(e) =>
-                  setForm({ ...form, status: e.target.value })
-                }
-                className="h-11 w-full rounded-xl border border-gray-300 bg-transparent px-4 text-sm outline-none transition focus:border-[#D01F1F] dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              >
-                <option value="">Sélectionner un statut</option>
-                <option value="Publié">Publié</option>
-                <option value="En cours">En cours</option>
-                <option value="Terminé">Terminé</option>
-                <option value="En attente">En attente</option>
-              </select>
             </div>
 
             {/* Image */}
             <div>
-              <Label>Image du projet</Label>
+              <Label>
+                Photo du membre
+              </Label>
 
               <div className="space-y-3">
-                {/* Aperçu de l'image */}
+                {/* Preview */}
                 {form.image && (
                   <div className="relative">
                     <img
                       src={form.image}
                       alt="Aperçu"
-                      className="h-32 w-full rounded-lg object-cover"
+                      className="h-40 w-full rounded-xl object-cover"
                     />
+
                     <button
                       type="button"
-                      onClick={() => setForm({ ...form, image: "" })}
+                      onClick={() =>
+                        setForm({
+                          ...form,
+
+                          image: "",
+
+                          imageFile:
+                            undefined,
+                        })
+                      }
                       className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                     >
                       <X className="h-4 w-4" />
@@ -156,26 +211,33 @@ export default function ProjectForm({
                   </div>
                 )}
 
-                {/* Input file caché */}
+                {/* Hidden input */}
                 <input
                   type="file"
                   accept="image/*"
+                  className="hidden"
+                  id="image-upload"
                   onChange={(e) => {
-                    const file = e.target.files?.[0];
+                    const file =
+                      e.target.files?.[0];
+
                     if (file) {
-                      // Stocker le fichier dans le formulaire au lieu de l'uploader
                       setForm({
                         ...form,
-                        imageFile: file,
-                        image: URL.createObjectURL(file) // Aperçu temporaire
+
+                        imageFile:
+                          file,
+
+                        image:
+                          URL.createObjectURL(
+                            file
+                          ),
                       });
                     }
                   }}
-                  className="hidden"
-                  id="image-upload"
                 />
 
-                {/* Bouton d'upload */}
+                {/* Upload button */}
                 <label
                   htmlFor="image-upload"
                   className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 transition hover:border-[#D01F1F] hover:text-[#D01F1F] dark:border-gray-700 dark:text-gray-400"
@@ -187,15 +249,20 @@ export default function ProjectForm({
             </div>
 
             {/* Description */}
-            <div className="lg:col-span-2">
+            <div>
               <Label>Description</Label>
 
               <TextArea
-                rows={5}
-                placeholder="Décrivez le projet, les objectifs, les réalisations et les résultats obtenus..."
+                rows={6}
+                placeholder="Ajoutez une courte biographie ou présentation du membre..."
                 value={form.description}
                 onChange={(value) =>
-                  setForm({ ...form, description: value })
+                  setForm({
+                    ...form,
+
+                    description:
+                      value,
+                  })
                 }
               />
             </div>
@@ -207,17 +274,30 @@ export default function ProjectForm({
               variant="outline"
               onClick={() => {
                 resetForm();
+
                 closeModal();
               }}
-              startIcon={<X className="mr-1 h-4 w-4" />}
+              startIcon={
+                <X className="mr-1 h-4 w-4" />
+              }
             >
               Annuler
             </Button>
 
             <Button
-              type="submit" loading={loading} startIcon={editingProject ? <SquarePen className="mr-1 h-4 w-4" /> : <CirclePlus className="mr-1 h-4 w-4" />}
+              type="submit"
+              loading={loading}
+              startIcon={
+                editingMember ? (
+                  <SquarePen className="mr-1 h-4 w-4" />
+                ) : (
+                  <CirclePlus className="mr-1 h-4 w-4" />
+                )
+              }
             >
-              {editingProject ? "Mettre à jour" : "Ajouter le projet"}
+              {editingMember
+                ? "Mettre à jour"
+                : "Ajouter le membre"}
             </Button>
           </div>
         </form>

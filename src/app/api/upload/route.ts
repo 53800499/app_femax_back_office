@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { storage } from "@/server/firebase/admin";
+import { bucket } from "@/server/firebase/admin";
 import { getAuth } from "firebase-admin/auth";
 
 export async function POST(req: NextRequest) {
@@ -53,8 +53,7 @@ export async function POST(req: NextRequest) {
 
     // Générer un nom de fichier unique
     const fileName = `projects/${decodedToken.uid}/${Date.now()}-${file.name}`;
-    const fileUpload = storage.bucket().file(fileName);
-
+    const fileUpload = bucket.file(fileName);
     // Upload du fichier
     await fileUpload.save(buffer, {
       metadata: {

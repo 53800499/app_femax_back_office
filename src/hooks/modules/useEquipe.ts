@@ -1,82 +1,88 @@
 import { useCallback, useEffect, useState } from "react";
-import { Project } from "@/server/modules/project/project.types";
 import { api } from "@/lib/api";
+import { EquipeType } from "@/server/modules/equipe/equipe.types";
 
-const API_URL = "/api/admin/projects";
+const API_URL = "/api/admin/equipe";
 
-export const useProjects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+export const useEquipes = () => {
+  const [equipes, setEquipes] = useState<EquipeType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getProjects = useCallback(async () => {
+  /* ------------------------------ GET ALL ----------------------------- */
+
+  const getEquipes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const result = await api.get<{ data: Project[] }>(API_URL);
+      const result = await api.get<{ data: EquipeType[] }>(API_URL);
 
-      setProjects(result.data ?? []);
+      setEquipes(result.data ?? []);
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Erreur lors du chargement des projets"
+          : "Erreur lors du chargement de l'équipe"
       );
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const createProject = useCallback(
-    async (data: Project) => {
+  /* ------------------------------ CREATE ----------------------------- */
+
+  const createEquipe = useCallback(
+    async (data: Omit<EquipeType, "id">) => {
       try {
         setLoading(true);
         setError(null);
 
         await api.post(API_URL, data);
 
-        await getProjects();
+        await getEquipes();
       } catch (err) {
         setError(
           err instanceof Error
             ? err.message
             : "Erreur lors de la création"
         );
-
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [getProjects]
+    [getEquipes]
   );
 
-  const updateProject = useCallback(
-    async (id: string, data: Partial<Project>) => {
+  /* ------------------------------ UPDATE ----------------------------- */
+
+  const updateEquipe = useCallback(
+    async (id: string, data: Partial<EquipeType>) => {
       try {
         setLoading(true);
         setError(null);
 
         await api.put(`${API_URL}/${id}`, data);
 
-        await getProjects();
+        await getEquipes();
       } catch (err) {
         setError(
           err instanceof Error
             ? err.message
             : "Erreur lors de la mise à jour"
         );
-
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [getProjects]
+    [getEquipes]
   );
 
-  const deleteProject = useCallback(
+  /* ------------------------------ DELETE ----------------------------- */
+
+  const deleteEquipe = useCallback(
     async (id: string) => {
       try {
         setLoading(true);
@@ -84,33 +90,34 @@ export const useProjects = () => {
 
         await api.delete(`${API_URL}/${id}`);
 
-        await getProjects();
+        await getEquipes();
       } catch (err) {
         setError(
           err instanceof Error
             ? err.message
             : "Erreur lors de la suppression"
         );
-
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [getProjects]
+    [getEquipes]
   );
 
+  /* ------------------------------ INIT ----------------------------- */
+
   useEffect(() => {
-    getProjects();
-  }, [getProjects]);
+    getEquipes();
+  }, [getEquipes]);
 
   return {
-    projects,
+    equipes,
     loading,
     error,
-    getProjects,
-    createProject,
-    updateProject,
-    deleteProject,
+    getEquipes,
+    createEquipe,
+    updateEquipe,
+    deleteEquipe,
   };
 };

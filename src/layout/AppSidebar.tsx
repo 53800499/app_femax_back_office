@@ -38,6 +38,11 @@ const navItems: NavItem[] = [
     path: "/admin/projects",
   },
   {
+    icon: <BoxCubeIcon />,
+    name: "Equipe",
+    path: "/admin/equipe",
+  },
+  {
     icon: <PageIcon />,
     name: "Blog",
     path: "/admin/blog",
@@ -51,12 +56,7 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />,
     name: "Profil",
     path: "/admin/profil",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "Paramètres",
-    path: "/admin/parametres",
-  },
+  }
 ];
 
 const AppSidebar: React.FC = () => {
@@ -100,7 +100,7 @@ const AppSidebar: React.FC = () => {
                   className={`ml-auto w-5 h-5 transition-transform duration-200  ${
                     openSubmenu?.type === menuType &&
                     openSubmenu?.index === index
-                      ? "rotate-180 text-brand-500"
+                      ? "rotate-180 text-red-800"
                       : ""
                   }`}
                 />

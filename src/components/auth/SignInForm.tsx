@@ -110,7 +110,7 @@ export default function SignInForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm" loading={loading}>
+                  <Button className="w-full" size="sm" type="submit" loading={loading}>
                     Se connecter
                   </Button>
                 </div>

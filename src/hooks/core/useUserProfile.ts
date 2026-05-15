@@ -56,7 +56,7 @@ export function useUserProfile() {
           createdAt: data.createdAt?.toDate() || new Date(),
           updatedAt: data.updatedAt?.toDate() || new Date(),
         } as UserProfile);
-      } else {
+      } /* else {
         // Create default profile if it doesn't exist
         const defaultProfile: Omit<UserProfile, 'id'> = {
           displayName: user.displayName || user.email?.split('@')[0] || 'Admin',
@@ -71,7 +71,7 @@ export function useUserProfile() {
           id: user.uid,
           ...defaultProfile,
         });
-      }
+      } */
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors du chargement du profil");
     } finally {
